@@ -85,4 +85,25 @@ footer {
   color: #777;
 }
 ```
-について
+について```$light-gray: #777;```を定義し、
+```$light-gray: #777;
+.
+.
+.
+h2 {
+  .
+  .
+  .
+  color: $light-gray;
+}
+.
+.
+.
+footer {
+  .
+  .
+  .
+  color: $light-gray;
+}
+```
+とすることができる
