@@ -43,3 +43,33 @@ end
 selfというキーワードを使わないと、Rubyによってremember_tokenという名前のローカル変数が作成される。
 selfキーワードを与えると、この代入によってユーザーのremember_token属性が期待どおりに設定される。
 ```update_attribute```メソッドを使って記憶ダイジェストを更新する。
+
+### ログイン状態の保持
+永続永続セッションの作成をする。cookiesメソッドを用いる。このメソッドは、sessionのときと同様にハッシュとして扱える。
+```
+cookies[:remember_token] = { value:   remember_token,
+                             expires: 20.years.from_now.utc }
+```
+```cookies[:user_id] = user.id```ならば生のテキストで穂斬されるので暗号化cookieを用いる。
+```cookies.encrypted[:user_id] = user.id```
+そしてcookieを永続化するために
+```
+cookies.permanent.encrypted[:user_id] = user.id
+```
+で```encrypted```と```oermanent```をメソッドチェーンで繋ぐ<br>
+```cookies.encrypted[:user_id]```では自動的にユーザーIDのcookiesの暗号が解除され元に戻る。
+続いて、bcryptを使って```cookies[:remember_token]```がremember_digestと一致することを確認しする。
+```BCrypt::Password.new(remember_digest) == remember_token```
+は```BCrypt::Password.new(remember_digest).is_password?(remember_token)```となっている。
+```
+if session[:user_id]
+  @current_user ||= User.find_by(id: session[:user_id])
+elsif cookies.encrypted[:user_id]
+  user = User.find_by(id: cookies.encrypted[:user_id])
+  if user && user.authenticated?(cookies[:remember_token])
+    log_in user
+    @current_user = user
+  end
+  ```
+  で一時セッションがあればそこから、それ以外は```cookies[:user_id]```から取り出す。
+end
