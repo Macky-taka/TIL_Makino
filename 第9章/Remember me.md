@@ -21,3 +21,25 @@ cookiesを盗み出す有名な方法は4通りある。<br>
 永続ユーザーIDを含むcookiesを受け取ったら、そのIDでデータベースを検索し、記憶トークンのcookiesがデータベース内のハッシュ値と一致することを確認する。<br>
 remember_digest属性をUserモデルに追加する。<br>
 ![Image of remember added](https://railstutorial.jp/chapters/6.0/images/figures/user_model_remember_digest.png)
+記憶トークンとして何を使うか決定する。ここではRuby標準ライブラリの```SecureRandom```モジュールにある```urlsafe_base64```メソッドを使う。
+```
+rails console
+>> SecureRandom.urlsafe_base64
+=> "brl_446-8bqHv87AQzUj_Q"
+```
+ユーザーを記憶するには、記憶トークンを作成して、そのトークンをダイジェストに変換したものをデータベースに保存する。
+```
+class User < ApplicationRecord
+  attr_accessor :remember_token
+  .
+  .
+  .
+  def remember
+    self.remember_token = ...
+    update_attribute(:remember_digest, ...)
+  end
+end
+```
+selfというキーワードを使わないと、Rubyによってremember_tokenという名前のローカル変数が作成される。
+selfキーワードを与えると、この代入によってユーザーのremember_token属性が期待どおりに設定される。
+```update_attribute```メソッドを使って記憶ダイジェストを更新する。
