@@ -72,4 +72,15 @@ elsif cookies.encrypted[:user_id]
   end
   ```
   で一時セッションがあればそこから、それ以外は```cookies[:user_id]```から取り出す。
-end
+
+# ユーザーを忘れる
+ユーザーを忘れるためのメソッド定義をする。```user.forget```メソッドによって、```user.remember```が取り消
+
+# 2つの目立たないバグ
+１つ目のバグは、ユーザーは場合によっては、同じサイトを複数のタブ（あるいはウィンドウ）で開いていることがあるが、ログアウト用リンクはログイン中のみ表示されるが、今の```current_user```の使い方では、ユーザーが1つのタブでログアウトし、もう1つのタブで再度ログアウトしようとするとエラーになる。これは、もう1つのタブで "Log out" リンクをクリックすると、```current_user```が```nil```となってしまうため、```log_out```メソッド内の```forget(current_user)```が失敗するからだ。この問題を回避するために、ユーザーがログイン中の場合にのみログアウトさせる必要がある。<br>
+2番目の地味な問題は、ユーザーが複数のブラウザ（FirefoxやChromeなど）でログインしていたときに起こる。例えば、Firefoxでログアウトし、Chromeではログアウトせずにブラウザを終了させ、再度Chromeで同じページを開くと、この問題が発生する。ユーザーがFirefoxからログアウトすると、```user.forget```メソッドによって```remember_digest```が```nil```になる。このとき、```log_out```メソッドによってユーザーIDが削除される。よって、```current_user```メソッドの最終的な評価結果は、期待どおり```nil```となる。一方、Chromeを閉じたとき、```session[:user_id]```は```nil```になるがcookiesがブラウザにのこっているためにif文が評価されてしまう。
+```user && user.authenticated?(cookies[:remember_token])```
+エラーは```remamber_digestがさくじょされているのに```BCrypt::Password.new(remember_digest).is_password?(remember_token)
+```が実行されてしまう。<br>
+```logged_in?```がtrueの場合に限って```log_out```を呼び出す。2番目の問題についてだが、統合テストで2種類のブラウザをシミュレートするのは正直かなり困難でる。その代わり、同じ問題をUserモデルで直接テストするだけなら簡単である。
+
