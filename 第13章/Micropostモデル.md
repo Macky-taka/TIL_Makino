@@ -53,5 +53,10 @@ order('created_at DESC')
 ```
 order(created_at: :desc)
 ```
-ラムダ式はProcやlambda（もしくは無名関数）と呼ばれるオブジェクトを作成する文法
+ラムダ式はProcやlambda（もしくは無名関数）と呼ばれるオブジェクトを作成する文法だ。```->```というラムダ式は、ブロックを引数に取り、Procオブジェクトを返す。このオブジェクトは、```call```メソッドが呼ばれたとき、ブロック内の処理を評価する。
+Procとは参照　https://docs.ruby-lang.org/ja/latest/class/Proc.html　
+lambda とは　https://blog.kikagaku.co.jp/python-lambda　 (paythonのサイト）
 
+###### Dependent: destroy
+マイクロポストに第二の要素を追加する。サイト管理者はユーザーを破棄する権限を持つ。よって、ユーザーが破棄された場合、ユーザーのマイクロポストも同様に破棄されるべきである。
+```dependent: :destroy```というオプションを使うと、ユーザーが削除されたときに、そのユーザーに紐付いた（そのユーザーが投稿した）マイクロポストも一緒に削除される。
