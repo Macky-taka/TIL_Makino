@@ -36,3 +36,18 @@
 Relationshipモデルの検証を追加して完全なものにする。
 
 ### フォローしているユーザー
+Relationshipの関連付けの核心、```following```と```followers```に着手する。今回は```has_many through```を用いる。
+```
+has_many :followeds, through: :active_relationships
+```
+「followeds」というシンボル名を見て、「followed」という単数形に変え、 relationshipsテーブルの```followed_id```を使って対象のユーザーを取得する。
+しかし、```user.followeds```という名前は英語として不適切であるため、代わりに```user.following```という名前を用いる。<br>
+次に、followingで取得した集合をより簡単に取り扱うために、```follow```や```unfollow```といった便利メソッドを追加する。
+今回は、こういったメソッドはテストから先に書く。すぐに使える場面がなく、実装した手応えを得にくいためである。
+
+### フォロワー
+
+```user.followers```メソッドを追加する。基本的に先ほどの逆
+###### Relationshipモデルのカラムを入れ替えて作った、フォロワーのモデル
+![image of follower](https://railstutorial.jp/chapters/6.0/images/figures/user_has_many_followers_3rd_edition.png)
+
