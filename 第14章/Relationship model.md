@@ -33,3 +33,6 @@
 |```user.active_relationships.build(followed_id: other_user.id)```|	userと紐付けた新しいRelationshipオブジェクトを返す|
 
 ### Relationshipのバリデーション
+Relationshipモデルの検証を追加して完全なものにする。
+
+### フォローしているユーザー
