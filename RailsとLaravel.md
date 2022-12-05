@@ -238,6 +238,21 @@ end
 
 
 
+使用例として
+Laravel:時事通信ニュース、グルナビ<br>
+Rails:クックパッド、価格.com<br>
+Laravelの方が自由度が高いが、コードが複雑になりがち
+
+　###### パッケージ管理
+ Ruby: bundler<br>
+ RHP: Composer
+ 
+ Railsはgemで様々なライブラリを使用できる。
+ 
+ 
+
+
+
 
 
 
@@ -247,3 +262,4 @@ end
 
 参考
 https://techblog.raccoon.ne.jp/archives/1550033605.html
+https://keyua.org/blog/rails-vs-laravel-in-depth-comparison/
