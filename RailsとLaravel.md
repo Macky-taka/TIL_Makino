@@ -62,6 +62,126 @@ end
 |update|$user = User::find(1);<br>$user->name = 'tanaka;<br>$user->save();|user = User.find(1)<br>user.name = 'tanaka'<br>user.save|
 |delete|	$user = User::find(1);<br>$user->delete();|user = User.find(1)<br>user.destroy|
 
+書き方は非常に似ている。
+
+機能の違いとしてLaravekには論理削除機能が標準搭載されている。Railsはgemを入れれば実現可能。<br>
+*論理削除とは、RBDを削除する際、現在有効か否かを示すフィードの値を変更することで削除扱いにする方式。実際のデータは削除しない。（https://e-words.jp/w/%E8%AB%96%E7%90%86%E5%89%8A%E9%99%A4.html）
+
+ ### マイグレーション
+ 
+ どちらも実装されている。コマンドは後ほど見る。
+ 
+ ##### マイグレーションファイル
+Useerモデルと紐付いている、userテーブルで考える。
+userテーブルの定義は以下。
+|カラム名	|データ型	|NULL|	Key	Default|	属性|
+|-------|------|-----|-------------|-----|
+|id	|int|	NO|	PRI|	NULL|	auto_increment|
+|name	|varchar	|NO|	|	NULL|	|
+|email|	varchar|	NO|	|	NULL	|unique|
+|password|	varchar	|NO	||	NULL	||
+|comment|	text	|YES	||	NULL|	|
+|create_at	|timestamp	|NO|	|	NULL|	|
+*varchar：可変文字列
+*プライマリーキ-は最も適したカラムに設定されるもの。<br>
+
+
+マイグレーションファイルの比較
+Laravel
+```
+<?php
+ 
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+ 
+class CreateUsersTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->text('comment')->nullable();
+            $table->timestamps();
+        });
+    }
+ 
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('users');
+    }
+}
+```
+Rails
+```
+class CreateUsers < ActiveRecord::Migration[5.2]
+  def change
+    create_table :users do |t|
+      t.string :name, null: false
+      t.string :email, unique: true, null: false
+      t.string :password, null: false
+      t.text :comment
+      t.timestamps null: false
+    end
+  end
+end
+```
+
+テーブル作成のマイグレーションファイルをコマンで生成するとRAilsではchangeメソッドがデフォルトで記述されたものが生成され、Laravelではupメソッドとdownメソッドがデフォルトで記述されたものが生成される。<br>
+Laravelではプライマリーキーになるidカラムの定義を記述しているが、 Railsでは、なのも記述しなくてもidカラムは生成される。<br>
+これらをマイグレートするとLaravelにidは「int(10) unsigned」となり、Railsのidは「bigint(20)」となり、同じテーブルにはならない。
+参考：https://confrage.jp/mysql%E3%81%AEintbigintdecimal%E3%81%AE%E4%BD%BF%E3%81%84%E5%88%86%E3%81%91%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6/ <br>
+https://blog.s-giken.net/367.html
+<br>
+また、LaravelではデフォルトでNOT NULLの制約がつくため、NULLを許可するカラムに"nullable()"とつけるが、Railsでは”NULL:false”でNOT NULL制約が定義される。
+
+### DI
+DI（Dependency Injection）：オブジェクトを成立させるために必要なコードをを実行時に注入する概念。詳しくはhttps://e-words.jp/w/%E4%BE%9D%E5%AD%98%E6%80%A7%E6%B3%A8%E5%85%A5.html <br>
+
+Laravelには機能があり、Railsにはない。(だから理解しにくかったのか...）
+LaravelのDI機能は簡潔には下記になる。<br>
+
+・Laravelアプリケーションの起動処理（サービスプロパイダと呼ぶ）の中で、DIするオブジェクトを格納するコンテナ（サービスコンテナと呼ぶ）へオブジェクトを登録する。<br>
+・サービスコンテナからオブジェクトを呼び出す
+
+### バリデーション
+
+記述場所とタイミング
+
+|Laravel	|Rails|
+|-------|-------|
+|記述場所	|Controller(FormRequest)	|Model|
+|推奨実行タイミング	|Controllerのメソッド内任意	|Modelのcreateやsave,updateの実行時|
+
+推奨実行タイミングではあるため、どこでやってもいいが、フレームワークとしては上記の場所で実行する方が見た目は良さそう。<br>
+Laravelの記述場所である"FormRequest"だが、これを用いるとControllerメソッドに入ったタイミングでバリデーションが完了している。
+
+##### コード
+場所が違うため、見た目も変わる
+バリデーションの定義
+|項目名	|バリデーション|
+|------|----------|
+|name|	必須,100文字以下|
+|email|	必須,100文字以下,メール形式,usersテーブルのemailカラムに同じ値が存在しない|
+|password	|必須,6文字以上, 12文字以下|
+
+
+
+
+
 
 
 
