@@ -177,6 +177,64 @@ Laravelの記述場所である"FormRequest"だが、これを用いるとContro
 |name|	必須,100文字以下|
 |email|	必須,100文字以下,メール形式,usersテーブルのemailカラムに同じ値が存在しない|
 |password	|必須,6文字以上, 12文字以下|
+Laravel
+UserRequest.php
+```
+<?php
+ 
+namespace App\Http\Requests;
+ 
+use Illuminate\Foundation\Http\FormRequest;
+ 
+class UserRequest extends FormRequest
+{
+    public function authorize()
+    {
+        return true;
+    }
+ 
+    public function rules()
+    {
+        return [
+            'name' => ['required', 'max:100'],
+            'email' => ['required', 'max:100', 'email', unique:users],
+            'password' => ['required', 'min:6', 'max:12'],
+        ];
+    }
+```
+Rails 
+User.rb
+```
+class User < ApplicationRecord
+    VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+ 
+    validates :name, presence: true, length: { maximum: 100 }
+    validates :email, presence: true, length: { maximum: 100 }, format: { with: VALID_EMAIL_REGEX }, uniqueness: true
+    validates :password, presence: true, length: { in: 6..12 }
+end
+```
+基本的には似ている。Laravelはメールアドレスの形式チェックが最初から用意されているように、バリデーションの種類が豊富。
+
+### コマンド
+
+まとめ一覧
+|操作	|Laravel	|Rails|
+|---|------|--------|
+|ルート確認	|php artisan route:list	|rails routes|
+|Controller作成	|php artisan make:controller コントローラー名	|rails generate controller コントローラー名|
+|Model作成	|php artisan make:model モデル名	|rails generate model モデル名|
+|マイグレーションファイル作成	|php artisan make:migration マイグレーションファイル名	|rails generate migration マイグレーションファイル名|
+|マイグレーション実行	|php artisan migrate	|rails db:migrate|
+|シーディング実行	|php artisan db:seed	|rails db:seed|
+|サーバ起動	|php artisan serve	|rails server|
+|REPL	|php artisan tinker	|rails console|
+
+基本的に似ている。
+サービスプロバイダやフォームリクエストもコマンドで生成する。
+
+|操作	|Laravel|
+|サービスプロバイダ作成	|php artisan make:provider サービスプロバイダ名|
+|FormRequest作成	|php artisan make:request フォームリクエスト名|
 
 
 
