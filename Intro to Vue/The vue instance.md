@@ -20,4 +20,20 @@ Vueインスタンスは選択した要素にプラグインされ、インス�
 
 ##### Putting our data in its place
 
-インスタンスのデータ
+インスタンスのデータはそのインスタンスがプラグインされている要素の内側からアクセスできる。
+##### Using an Expression
+
+https://unpkg.com/vue@next
+
+https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js
+
+チュートリアルの推奨がvue3のくせに全てvue2で動くコードがサンプルで気づくのに時間がかかった。
+
+https://blog.capilano-fw.com/?p=6393#Vue
+
+{{}}が受け口でjavascriptが使える。
+
+##### Introducing Reactivity
+
+Vueがreactiveであり、インスタンスのデータは、データが、参照される全ての場所にリンクしている。
+
