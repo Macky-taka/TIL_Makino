@@ -52,6 +52,12 @@ slotとは親となるコンポーネント側から、子のコンポーネン�
 
 基本構文全体はhttps://qiita.com/_masa_u/items/7a940f1aea8be4eef4fe
 
+### ファイルの読み込み
+
+export defaultと　import from
+
+
+https://prograshi.com/language/vue-js/how-to-use-export-default-in-vue-and-js/
 
 その他参考：
 https://qiita.com/mimoe/items/b2ebfc1b38e5a905d19b
