@@ -72,7 +72,11 @@ Railsでも一度使用した。S3とはAWSのサービスのひとつで、「A
 AWSのS3ではすべてのオブジェクトに対して99.999999999% (9 x 11)の耐久性を実現<br>
 低コストによる運用が可能<br>
 
+aws　s３のコマンド一覧：　https://qiita.com/uhooi/items/48ef6ef2b34162988295
 
+今後s3をlocalstackで使うには保存先？みたいなんを4566にしないとけないかもしれん。
+
+https://qiita.com/mizue/items/7bd79d868a7df888388c
 
 公開鍵
 https://it-trend.jp/encryption/article/64-0089
