@@ -1,0 +1,10 @@
+#　生徒の削除
+
+
+
+ボタンについて
+https://getbootstrap.jp/docs/5.0/components/buttons/
+
+モダールと情報について
+https://qiita.com/kenji__n/items/36b2fd617d49d491c626
+後々使いそう
